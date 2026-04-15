@@ -1,0 +1,6 @@
+.secrets
+*.secret
+.DS_Store
+*.swp
+*.swo
+*~

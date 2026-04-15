@@ -1,0 +1,70 @@
+[alias]
+	l = log --pretty=oneline -n 20 --graph --abbrev-commit
+	s = status -s
+	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+	p = pull --recurse-submodules
+	c = clone --recursive
+	go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+	tags = tag -l
+	branches = branch --all
+	remotes = remote --verbose
+	aliases = config --get-regexp alias
+	amend = commit --amend --reuse-message=HEAD
+	dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+	contributors = shortlog --summary --numbered
+	whoami = config user.email
+
+[apply]
+	whitespace = fix
+
+[branch]
+	sort = -committerdate
+
+[core]
+	excludesfile = ~/.gitignore_global
+	trustctime = false
+	precomposeunicode = false
+	untrackedCache = true
+
+[color]
+	ui = auto
+
+[diff]
+	renames = copies
+
+[help]
+	autocorrect = 1
+
+[merge]
+	log = true
+
+[push]
+	default = simple
+	followTags = true
+
+[init]
+	defaultBranch = main
+
+[user]
+	name = Troels Lauritz Reese Christensen
+	email = tlrc1984@gmail.com
+	signingKey = 765E082D
+
+[http]
+	postBuffer = 524288000
+
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential
+
+[url "git@github.com:"]
+	insteadOf = "gh:"
+	pushInsteadOf = "github:"
+	pushInsteadOf = "git://github.com/"
+
+[url "git://github.com/"]
+	insteadOf = "github:"

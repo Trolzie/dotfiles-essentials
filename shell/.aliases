@@ -1,0 +1,37 @@
+# ── Navigation ──
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias p="cd ~/projects"
+
+# ── ls ──
+if ls --color > /dev/null 2>&1; then
+	colorflag="--color"
+else
+	colorflag="-G"
+fi
+alias l="ls -lF ${colorflag}"
+alias la="ls -lAF ${colorflag}"
+alias ls="command ls ${colorflag}"
+
+# ── grep ──
+alias grep='grep --color=auto'
+
+# ── Git ──
+alias g="git"
+
+# ── Shortcuts ──
+alias reload="exec ${SHELL} -l"
+alias path='echo -e ${PATH//:/\\n}'
+alias c="tr -d '\n' | pbcopy"
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+
+# ── macOS ──
+alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
+
+# ── IP ──
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias localip="ipconfig getifaddr en0"

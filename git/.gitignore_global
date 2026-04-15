@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+._*
+Thumbs.db
+
+# Editors
+*.swp
+*.swo
+*~
+
+# Claude Code
+**/.claude/settings.local.json
