@@ -208,8 +208,7 @@ defaults write com.apple.dock launchanim -bool false
 defaults write com.apple.dock expose-animation-duration -float 0.1
 defaults write com.apple.dock minimize-to-application -bool true
 
-# Animations (universalaccess is protected on newer macOS — needs sudo or System Settings)
-defaults write com.apple.universalaccess reduceMotion -bool true 2>/dev/null || true
+# Animations
 defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
 defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
 
@@ -233,12 +232,13 @@ defaults write com.apple.LaunchServices LSQuarantine -bool false
 
 # These need sudo — skip if not available
 if sudo -n true 2>/dev/null; then
+  sudo defaults write com.apple.universalaccess reduceMotion -bool true 2>/dev/null
   sudo systemsetup -settimezone "Europe/Copenhagen" > /dev/null 2>&1
   sudo nvram SystemAudioVolume=" " 2>/dev/null
   sudo nvram StartupMute=%01 2>/dev/null
-  ok "All defaults set (including boot sound + timezone)"
+  ok "All defaults set (including reduce motion, boot sound + timezone)"
 else
-  warn "Skipped boot sound + timezone (need sudo). Run with sudo later if needed."
+  warn "Skipped reduce motion, boot sound + timezone (need sudo). Run with sudo later if needed."
   ok "User defaults set"
 fi
 
