@@ -84,11 +84,18 @@ fi
 step "Brew packages"
 
 if [ -f "$DOTFILES/Brewfile" ]; then
-  info "Installing packages (skipping already installed)..."
-  if ! brew bundle --file="$DOTFILES/Brewfile" --no-lock --no-upgrade; then
-    warn "Some packages may have failed — check output above"
-  fi
-  ok "Brew bundle complete"
+  info "Installing packages..."
+  brew bundle --file="$DOTFILES/Brewfile" --no-lock --no-upgrade --verbose || true
+
+  # Verify casks — brew bundle can silently skip these
+  for cask in $(grep '^cask ' "$DOTFILES/Brewfile" | sed 's/cask "//;s/"//'); do
+    if ! brew list --cask "$cask" &>/dev/null; then
+      info "Installing $cask (missed by bundle)..."
+      brew install --cask "$cask" || warn "Failed to install $cask"
+    fi
+  done
+
+  ok "All packages ready"
 else
   warn "No Brewfile found, skipping"
 fi
