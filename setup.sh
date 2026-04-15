@@ -27,7 +27,11 @@ pause() {
 
 step "Homebrew"
 
-if command -v brew &>/dev/null; then
+# Always ensure brew is in PATH (even on re-runs where .zprofile isn't stowed yet)
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  ok "Already installed"
+elif command -v brew &>/dev/null; then
   ok "Already installed"
 else
   info "Installing Homebrew..."
@@ -130,6 +134,11 @@ fi
 # ── Step 5: Stow symlinks ──
 
 step "Symlinks"
+
+if ! command -v stow &>/dev/null; then
+  info "stow not found, installing..."
+  brew install stow
+fi
 
 mkdir -p "$HOME/bin" "$HOME/.config"
 
