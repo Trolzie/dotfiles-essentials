@@ -87,7 +87,15 @@ if [ -f "$DOTFILES/Brewfile" ]; then
   info "Installing packages..."
   brew bundle --file="$DOTFILES/Brewfile" --no-lock --no-upgrade --verbose || true
 
-  # Verify casks — brew bundle can silently skip these
+  # Verify formulas — brew bundle can silently skip packages
+  for formula in $(grep '^brew ' "$DOTFILES/Brewfile" | sed 's/brew "//;s/".*//'); do
+    if ! brew list "$formula" &>/dev/null; then
+      info "Installing $formula (missed by bundle)..."
+      brew install "$formula" || warn "Failed to install $formula"
+    fi
+  done
+
+  # Verify casks — brew bundle can silently skip these too
   for cask in $(grep '^cask ' "$DOTFILES/Brewfile" | sed 's/cask "//;s/"//'); do
     if ! brew list --cask "$cask" &>/dev/null; then
       info "Installing $cask (missed by bundle)..."
