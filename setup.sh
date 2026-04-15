@@ -182,7 +182,7 @@ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 # Trackpad
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+defaults write NSGlobalDomain com.apple.swipescrolldirection -bool true
 
 # Finder
 defaults write com.apple.finder AppleShowAllFiles -bool true
