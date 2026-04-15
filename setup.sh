@@ -3,7 +3,7 @@ set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PACKAGES=(git shell zsh karabiner)
-TOTAL_STEPS=7
+TOTAL_STEPS=8
 STEP=0
 
 # ── Helpers ──
@@ -279,6 +279,22 @@ if command -v nvm &>/dev/null; then
     info "Installing Node.js LTS..."
     nvm install --lts
     ok "Node.js LTS installed"
+  fi
+fi
+
+# ── Step 8: Claude Code ──
+
+step "Claude Code"
+
+if command -v claude &>/dev/null; then
+  ok "Already installed"
+else
+  if command -v npm &>/dev/null; then
+    info "Installing Claude Code..."
+    npm install -g @anthropic-ai/claude-code
+    ok "Claude Code installed"
+  else
+    warn "npm not available — restart terminal and re-run to install Claude Code"
   fi
 fi
 
