@@ -142,11 +142,13 @@ fi
 
 mkdir -p "$HOME/bin" "$HOME/.config"
 
-# Back up oh-my-zsh's default .zshrc if it exists
-if [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
-  mv "$HOME/.zshrc" "$HOME/.zshrc.pre-stow"
-  info "Backed up existing .zshrc to .zshrc.pre-stow"
-fi
+# Remove files that conflict with stow (created by Homebrew/oh-my-zsh installers)
+for f in .zshrc .zprofile .gitconfig .aliases .gitignore_global; do
+  if [ -f "$HOME/$f" ] && [ ! -L "$HOME/$f" ]; then
+    mv "$HOME/$f" "$HOME/${f}.pre-stow"
+    info "Backed up ~/$f to ${f}.pre-stow"
+  fi
+done
 
 for pkg in "${PACKAGES[@]}"; do
   if [ -d "$DOTFILES/$pkg" ]; then
