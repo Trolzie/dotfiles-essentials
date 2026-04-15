@@ -28,7 +28,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # ── Aliases ──
-source ~/.aliases
+[[ -f ~/.aliases ]] && source ~/.aliases
 
 # ── Powerlevel10k config ──
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

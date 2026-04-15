@@ -5,19 +5,37 @@ Minimal GNU Stow dotfiles for macOS (Apple Silicon).
 ## New Machine Setup
 
 ```bash
-# 1. Install Homebrew
+# 1. Install Homebrew (also installs Xcode CLT)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# 2. Clone and run
-git clone git@github.com:Trolzie/dotfiles-essentials.git ~/dotfiles
+# 2. Clone via HTTPS (SSH keys don't exist yet) and run setup
+git clone https://github.com/Trolzie/dotfiles-essentials.git ~/dotfiles
 cd ~/dotfiles
 ./setup.sh
 ```
 
-That's it. `setup.sh` handles everything in order: Homebrew, SSH keys, brew packages, oh-my-zsh + plugins + Powerlevel10k, symlinks, macOS defaults, and Node.js. Already-installed tools are skipped.
+`setup.sh` handles everything: Homebrew, SSH key generation, brew packages, oh-my-zsh + plugins + Powerlevel10k, symlinks, macOS defaults, and Node.js. Already-installed tools are skipped. The remote is switched to SSH automatically after key setup.
 
-After restart, run `p10k configure` to set up your prompt.
+After restart:
+1. `p10k configure` — set up your prompt
+2. `gh auth login` — authenticate GitHub CLI
+
+## Syncing Between Machines
+
+Configs are symlinked into `~/dotfiles` via Stow, so edits go straight to the repo.
+
+```bash
+# On machine you edited configs on:
+cd ~/dotfiles
+git add -A && git commit -m "update aliases" && git push
+
+# On other machine — pull updates (symlinks auto-update):
+cd ~/dotfiles && git pull
+
+# If new stow packages were added, also run:
+./setup.sh
+```
 
 ## Structure
 
@@ -28,7 +46,7 @@ After restart, run `p10k configure` to set up your prompt.
 | `shell/` | `.aliases` |
 | `karabiner/` | Caps Lock → Meh Key remap |
 
-## Adding packages later
+## Adding Packages
 
 ```bash
 mkdir ~/dotfiles/newpkg

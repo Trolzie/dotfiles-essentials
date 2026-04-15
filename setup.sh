@@ -57,25 +57,22 @@ else
   pause
 fi
 
+# Switch remote to SSH if currently HTTPS (supports initial HTTPS clone)
+if git -C "$DOTFILES" remote get-url origin 2>/dev/null | grep -q "^https://"; then
+  git -C "$DOTFILES" remote set-url origin "git@github.com:Trolzie/dotfiles-essentials.git"
+  ok "Switched git remote to SSH"
+fi
+
 # ── Step 3: Brew packages ──
 
 step "Brew packages"
 
 if [ -f "$DOTFILES/Brewfile" ]; then
   info "Installing packages (skipping already installed)..."
-  brew bundle --file="$DOTFILES/Brewfile" --no-lock --no-upgrade 2>&1 | while IFS= read -r line; do
-    case "$line" in
-      *"already installed"*|*"already an App"*|*"Skipping"*)
-        pkg=$(echo "$line" | sed 's/.*install //' | sed 's/ .*//')
-        ok "$pkg (already installed)"
-        ;;
-      *"Installing"*|*"Downloading"*)
-        pkg=$(echo "$line" | sed 's/.*install //' | sed 's/ .*//')
-        info "Installing $pkg..."
-        ;;
-    esac
-  done
-  ok "All packages ready"
+  if ! brew bundle --file="$DOTFILES/Brewfile" --no-lock --no-upgrade; then
+    warn "Some packages may have failed — check output above"
+  fi
+  ok "Brew bundle complete"
 else
   warn "No Brewfile found, skipping"
 fi
@@ -132,8 +129,11 @@ fi
 
 for pkg in "${PACKAGES[@]}"; do
   if [ -d "$DOTFILES/$pkg" ]; then
-    stow -d "$DOTFILES" -t "$HOME" --adopt "$pkg" 2>/dev/null || stow -d "$DOTFILES" -t "$HOME" "$pkg"
-    ok "Stowed $pkg"
+    if stow -d "$DOTFILES" -t "$HOME" -R "$pkg" 2>/dev/null; then
+      ok "Stowed $pkg"
+    else
+      warn "Conflict stowing $pkg — back up conflicting files and re-run"
+    fi
   fi
 done
 
@@ -211,7 +211,7 @@ fi
 # Load nvm and install LTS if not present
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 if command -v nvm &>/dev/null; then
-  if nvm ls --no-colors 2>/dev/null | grep -q "lts"; then
+  if nvm which lts/* &>/dev/null; then
     ok "Node.js LTS already installed"
   else
     info "Installing Node.js LTS..."
@@ -224,11 +224,10 @@ fi
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  All done! Restart your terminal, then run:"
+echo "  All done! Restart your terminal, then:"
 echo ""
-echo "    p10k configure"
-echo ""
-echo "  to set up your prompt theme."
+echo "    1. p10k configure     — set up your prompt"
+echo "    2. gh auth login      — authenticate GitHub CLI"
 echo ""
 echo "  Optional: copy ~/.secrets from your backup"
 echo "    chmod 600 ~/.secrets"
