@@ -175,11 +175,20 @@ defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 defaults write com.apple.finder AppleShowAllFiles -bool true
 defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder ShowStatusBar -bool true
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+defaults write com.apple.finder DisableAllAnimations -bool true
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
 # Dock
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0
+defaults write com.apple.dock tilesize -int 34
 defaults write com.apple.dock mineffect -string "scale"
 defaults write com.apple.dock show-recents -bool false
 defaults write com.apple.dock launchanim -bool false
@@ -190,7 +199,12 @@ defaults write com.apple.dock minimize-to-application -bool true
 defaults write com.apple.universalaccess reduceMotion -bool true
 defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
 defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
-defaults write com.apple.finder DisableAllAnimations -bool true
+
+# Screenshots
+defaults write com.apple.screencapture disable-shadow -bool true
+
+# Time Machine
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 # Locale
 defaults write NSGlobalDomain AppleLanguages -array "en" "nl"
@@ -215,6 +229,12 @@ else
   ok "User defaults set"
 fi
 
+# Restart affected apps so changes apply immediately
+killall Dock 2>/dev/null || true
+killall Finder 2>/dev/null || true
+killall SystemUIServer 2>/dev/null || true
+ok "Dock and Finder restarted"
+
 # ── Step 7: Node.js ──
 
 step "Node.js (nvm)"
@@ -232,7 +252,7 @@ fi
 # Load nvm and install LTS if not present
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 if command -v nvm &>/dev/null; then
-  if nvm which lts/* &>/dev/null; then
+  if nvm which "lts/*" &>/dev/null; then
     ok "Node.js LTS already installed"
   else
     info "Installing Node.js LTS..."
