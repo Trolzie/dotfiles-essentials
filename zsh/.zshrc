@@ -27,8 +27,14 @@ export NVM_DIR="$HOME/.nvm"
 # ── bun ──
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
+# ── Disable XOFF (frees Ctrl-s for tmux prefix) ──
+stty -ixon
+
 # ── Aliases ──
 [[ -f ~/.aliases ]] && source ~/.aliases
+
+# ── tmux-sessionizer (Ctrl-f) ──
+bindkey -s '^f' 'tmux-sessionizer\n'
 
 # ── Powerlevel10k config ──
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

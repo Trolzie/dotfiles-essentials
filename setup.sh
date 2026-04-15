@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGES=(git shell zsh karabiner tmux)
+PACKAGES=(git shell zsh karabiner tmux bin)
 TOTAL_STEPS=8
 STEP=0
 
@@ -155,7 +155,7 @@ if ! command -v stow &>/dev/null; then
   brew install stow
 fi
 
-mkdir -p "$HOME/bin" "$HOME/.config"
+mkdir -p "$HOME/bin" "$HOME/.config" "$HOME/projects"
 
 # Stow with --adopt: if a target file already exists (e.g. .zprofile from
 # Homebrew, .zshrc from oh-my-zsh), adopt it into the repo then restore
