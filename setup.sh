@@ -195,8 +195,8 @@ defaults write com.apple.dock launchanim -bool false
 defaults write com.apple.dock expose-animation-duration -float 0.1
 defaults write com.apple.dock minimize-to-application -bool true
 
-# Animations
-defaults write com.apple.universalaccess reduceMotion -bool true
+# Animations (universalaccess is protected on newer macOS — needs sudo or System Settings)
+defaults write com.apple.universalaccess reduceMotion -bool true 2>/dev/null || true
 defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
 defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
 
