@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGES=(git shell zsh karabiner)
+PACKAGES=(git shell zsh karabiner tmux)
 TOTAL_STEPS=8
 STEP=0
 
@@ -289,13 +289,9 @@ step "Claude Code"
 if command -v claude &>/dev/null; then
   ok "Already installed"
 else
-  if command -v npm &>/dev/null; then
-    info "Installing Claude Code..."
-    npm install -g @anthropic-ai/claude-code
-    ok "Claude Code installed"
-  else
-    warn "npm not available — restart terminal and re-run to install Claude Code"
-  fi
+  info "Installing Claude Code..."
+  curl -fsSL https://claude.ai/install.sh | bash
+  ok "Claude Code installed"
 fi
 
 # ── Done ──
