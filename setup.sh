@@ -265,10 +265,9 @@ fi
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  All done! Restart your terminal, then:"
+echo "  All done! Restart your terminal, then run:"
 echo ""
-echo "    1. p10k configure     — set up your prompt"
-echo "    2. gh auth login      — authenticate GitHub CLI"
+echo "    p10k configure"
 echo ""
 echo "  Optional: copy ~/.secrets from your backup"
 echo "    chmod 600 ~/.secrets"

@@ -9,17 +9,19 @@ Minimal GNU Stow dotfiles for macOS (Apple Silicon).
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# 2. Clone via HTTPS (SSH keys don't exist yet) and run setup
-git clone https://github.com/Trolzie/dotfiles-essentials.git ~/dotfiles
+# 2. Authenticate with GitHub (browser-based, no password needed)
+brew install gh
+gh auth login
+
+# 3. Clone and run setup
+gh repo clone Trolzie/dotfiles-essentials ~/dotfiles
 cd ~/dotfiles
 ./setup.sh
 ```
 
-`setup.sh` handles everything: Homebrew, SSH key generation, brew packages, oh-my-zsh + plugins + Powerlevel10k, symlinks, macOS defaults, and Node.js. Already-installed tools are skipped. The remote is switched to SSH automatically after key setup.
+`setup.sh` handles everything: SSH key generation, brew packages, oh-my-zsh + plugins + Powerlevel10k, symlinks, macOS defaults, and Node.js. Already-installed tools are skipped. The remote is switched to SSH automatically after key setup.
 
-After restart:
-1. `p10k configure` — set up your prompt
-2. `gh auth login` — authenticate GitHub CLI
+After restart, run `p10k configure` to set up your prompt.
 
 ## Syncing Between Machines
 
