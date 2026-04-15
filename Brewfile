@@ -18,5 +18,6 @@ brew "gnupg"
 brew "python@3.13"
 
 # Casks
+cask "1password"
 cask "font-meslo-lg-nerd-font"
 cask "ghostty"
