@@ -29,7 +29,7 @@ alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 # ── macOS ──
 alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
 alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
-alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+alias afk="osascript -e 'tell application \"System Events\" to keystroke \"q\" using {command down, control down}'"
 alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
 
 # ── IP ──

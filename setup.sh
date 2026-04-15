@@ -46,8 +46,20 @@ else
   info "Generating SSH key..."
   ssh-keygen -t ed25519 -C "tlrc1984@gmail.com" </dev/tty
   eval "$(ssh-agent -s)" > /dev/null 2>&1
-  ssh-add "$HOME/.ssh/id_ed25519"
+  ssh-add --apple-use-keychain "$HOME/.ssh/id_ed25519"
   ok "Key generated"
+
+  # Persist key across reboots via macOS Keychain
+  if [ ! -f "$HOME/.ssh/config" ]; then
+    cat > "$HOME/.ssh/config" << 'SSHEOF'
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+SSHEOF
+    chmod 600 "$HOME/.ssh/config"
+    ok "SSH config created (key will persist across reboots)"
+  fi
   echo ""
   echo "  Your public key:"
   echo ""
@@ -129,7 +141,7 @@ fi
 
 for pkg in "${PACKAGES[@]}"; do
   if [ -d "$DOTFILES/$pkg" ]; then
-    if stow -d "$DOTFILES" -t "$HOME" -R "$pkg" 2>/dev/null; then
+    if stow -d "$DOTFILES" -t "$HOME" -R "$pkg" 2>&1; then
       ok "Stowed $pkg"
     else
       warn "Conflict stowing $pkg — back up conflicting files and re-run"
@@ -170,6 +182,15 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 # Dock
 defaults write com.apple.dock mineffect -string "scale"
 defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.dock launchanim -bool false
+defaults write com.apple.dock expose-animation-duration -float 0.1
+defaults write com.apple.dock minimize-to-application -bool true
+
+# Animations
+defaults write com.apple.universalaccess reduceMotion -bool true
+defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
+defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
+defaults write com.apple.finder DisableAllAnimations -bool true
 
 # Locale
 defaults write NSGlobalDomain AppleLanguages -array "en" "nl"
