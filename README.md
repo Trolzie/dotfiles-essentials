@@ -19,7 +19,7 @@ cd ~/dotfiles
 ./setup.sh
 ```
 
-`setup.sh` handles everything: SSH key generation, brew packages, oh-my-zsh + plugins + Powerlevel10k, symlinks, macOS defaults, and Node.js. Already-installed tools are skipped. The remote is switched to SSH automatically after key setup.
+`setup.sh` handles everything: SSH key generation, brew packages, oh-my-zsh + plugins + Powerlevel10k, symlinks, macOS defaults, Node.js, and Claude Code. Already-installed tools are skipped. The remote is switched to SSH automatically after key setup.
 
 After restart, run `p10k configure` to set up your prompt.
 
@@ -47,6 +47,7 @@ cd ~/dotfiles && git pull
 | `zsh/` | `.zshrc`, `.zprofile` |
 | `shell/` | `.aliases` |
 | `karabiner/` | Caps Lock → Meh Key remap |
+| `tmux/` | tmux configuration |
 
 ## Adding Packages
 
