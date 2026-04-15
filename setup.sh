@@ -142,23 +142,18 @@ fi
 
 mkdir -p "$HOME/bin" "$HOME/.config"
 
-# Remove files that conflict with stow (created by Homebrew/oh-my-zsh installers)
-for f in .zshrc .zprofile .gitconfig .aliases .gitignore_global; do
-  if [ -f "$HOME/$f" ] && [ ! -L "$HOME/$f" ]; then
-    mv "$HOME/$f" "$HOME/${f}.pre-stow"
-    info "Backed up ~/$f to ${f}.pre-stow"
+# Stow with --adopt: if a target file already exists (e.g. .zprofile from
+# Homebrew, .zshrc from oh-my-zsh), adopt it into the repo then restore
+# our version via git checkout. This handles ANY conflict automatically.
+for pkg in "${PACKAGES[@]}"; do
+  if [ -d "$DOTFILES/$pkg" ]; then
+    stow -d "$DOTFILES" -t "$HOME" -R --adopt "$pkg"
+    ok "Stowed $pkg"
   fi
 done
 
-for pkg in "${PACKAGES[@]}"; do
-  if [ -d "$DOTFILES/$pkg" ]; then
-    if stow -d "$DOTFILES" -t "$HOME" -R "$pkg" 2>&1; then
-      ok "Stowed $pkg"
-    else
-      warn "Conflict stowing $pkg — back up conflicting files and re-run"
-    fi
-  fi
-done
+# Restore our versions (--adopt may have overwritten repo files with local ones)
+git -C "$DOTFILES" checkout -- .
 
 # ── Step 6: macOS defaults ──
 
