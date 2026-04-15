@@ -28,7 +28,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # ── Disable XOFF (frees Ctrl-s for tmux prefix) ──
-stty -ixon
+[[ -t 0 ]] && stty -ixon
 
 # ── Aliases ──
 [[ -f ~/.aliases ]] && source ~/.aliases
