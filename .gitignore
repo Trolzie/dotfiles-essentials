@@ -5,4 +5,5 @@
 *.swo
 *~
 .claude/
+!claude/.claude/
 logs/
