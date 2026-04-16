@@ -14,6 +14,9 @@ brew "jq"
 brew "lazygit"
 brew "gnupg"
 
+# AI
+brew "ollama"
+
 # Languages
 brew "python@3.13"
 
