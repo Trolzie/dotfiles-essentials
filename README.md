@@ -19,7 +19,7 @@ cd ~/dotfiles
 ./setup.sh
 ```
 
-`setup.sh` handles everything: SSH key generation, brew packages, oh-my-zsh + plugins + Powerlevel10k, symlinks, macOS defaults, Node.js, and Claude Code. Already-installed tools are skipped. The remote is switched to SSH automatically after key setup.
+`setup.sh` handles first-time setup: SSH key generation, oh-my-zsh + plugins + Powerlevel10k, macOS defaults, Node.js, and Claude Code. It calls `sync.sh` at the end for brew packages and symlinks. Already-installed tools are skipped. The remote is switched to SSH automatically after key setup.
 
 After restart, run `p10k configure` to set up your prompt.
 
@@ -32,11 +32,9 @@ Configs are symlinked into `~/dotfiles` via Stow, so edits go straight to the re
 cd ~/dotfiles
 git add -A && git commit -m "update aliases" && git push
 
-# On other machine — pull updates (symlinks auto-update):
+# On other machine — pull and sync:
 cd ~/dotfiles && git pull
-
-# If new stow packages were added, also run:
-./setup.sh
+./sync.sh
 ```
 
 ## Structure
@@ -48,6 +46,7 @@ cd ~/dotfiles && git pull
 | `shell/` | `.aliases` |
 | `karabiner/` | Caps Lock → Meh Key remap |
 | `tmux/` | tmux configuration |
+| `claude/` | Claude Code settings + statusline |
 
 ## Adding Packages
 
@@ -55,7 +54,7 @@ cd ~/dotfiles && git pull
 mkdir ~/dotfiles/newpkg
 # Add files mirroring $HOME structure
 stow -d ~/dotfiles -t ~ newpkg
-# Add to PACKAGES array in setup.sh
+# Add to PACKAGES array in sync.sh
 ```
 
 ## Secrets

@@ -2,8 +2,7 @@
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGES=(git shell zsh karabiner tmux bin claude)
-TOTAL_STEPS=8
+TOTAL_STEPS=7
 STEP=0
 
 # ── Helpers ──
@@ -79,36 +78,7 @@ if git -C "$DOTFILES" remote get-url origin 2>/dev/null | grep -q "^https://"; t
   ok "Switched git remote to SSH"
 fi
 
-# ── Step 3: Brew packages ──
-
-step "Brew packages"
-
-if [ -f "$DOTFILES/Brewfile" ]; then
-  info "Installing packages..."
-  brew bundle --file="$DOTFILES/Brewfile" --no-lock --no-upgrade --verbose || true
-
-  # Verify formulas — brew bundle can silently skip packages
-  for formula in $(grep '^brew ' "$DOTFILES/Brewfile" | sed 's/brew "//;s/".*//'); do
-    if ! brew list "$formula" &>/dev/null; then
-      info "Installing $formula (missed by bundle)..."
-      brew install "$formula" || warn "Failed to install $formula"
-    fi
-  done
-
-  # Verify casks — brew bundle can silently skip these too
-  for cask in $(grep '^cask ' "$DOTFILES/Brewfile" | sed 's/cask "//;s/"//'); do
-    if ! brew list --cask "$cask" &>/dev/null; then
-      info "Installing $cask (missed by bundle)..."
-      brew install --cask "$cask" || warn "Failed to install $cask"
-    fi
-  done
-
-  ok "All packages ready"
-else
-  warn "No Brewfile found, skipping"
-fi
-
-# ── Step 4: Shell setup ──
+# ── Step 3: Shell setup ──
 
 step "Shell (oh-my-zsh + plugins + Powerlevel10k)"
 
@@ -146,31 +116,7 @@ else
   ok "Powerlevel10k installed"
 fi
 
-# ── Step 5: Stow symlinks ──
-
-step "Symlinks"
-
-if ! command -v stow &>/dev/null; then
-  info "stow not found, installing..."
-  brew install stow
-fi
-
-mkdir -p "$HOME/bin" "$HOME/.config" "$HOME/projects"
-
-# Stow with --adopt: if a target file already exists (e.g. .zprofile from
-# Homebrew, .zshrc from oh-my-zsh), adopt it into the repo then restore
-# our version via git checkout. This handles ANY conflict automatically.
-for pkg in "${PACKAGES[@]}"; do
-  if [ -d "$DOTFILES/$pkg" ]; then
-    stow -d "$DOTFILES" -t "$HOME" -R --adopt "$pkg"
-    ok "Stowed $pkg"
-  fi
-done
-
-# Restore our versions (--adopt may have overwritten repo files with local ones)
-git -C "$DOTFILES" checkout -- .
-
-# ── Step 6: macOS defaults ──
+# ── Step 4: macOS defaults ──
 
 step "macOS defaults"
 
@@ -256,7 +202,7 @@ killall Finder 2>/dev/null || true
 killall SystemUIServer 2>/dev/null || true
 ok "Dock and Finder restarted"
 
-# ── Step 7: Node.js ──
+# ── Step 5: Node.js ──
 
 step "Node.js (nvm)"
 
@@ -282,7 +228,7 @@ if command -v nvm &>/dev/null; then
   fi
 fi
 
-# ── Step 8: Claude Code ──
+# ── Step 6: Claude Code ──
 
 step "Claude Code"
 
@@ -293,6 +239,12 @@ else
   curl -fsSL https://claude.ai/install.sh | bash
   ok "Claude Code installed"
 fi
+
+# ── Step 7: Sync (brew packages + symlinks) ──
+
+step "Sync"
+
+bash "$DOTFILES/sync.sh"
 
 # ── Done ──
 
