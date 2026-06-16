@@ -47,6 +47,7 @@ cd ~/dotfiles && git pull
 | `karabiner/` | Caps Lock → Meh Key remap |
 | `tmux/` | tmux configuration |
 | `claude/` | Claude Code settings + statusline |
+| `pi/` | pi coding agent extensions |
 
 ## Adding Packages
 

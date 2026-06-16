@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGES=(git shell zsh karabiner tmux bin claude)
+PACKAGES=(git shell zsh karabiner tmux bin claude pi)
 
 # ── Helpers ──
 
