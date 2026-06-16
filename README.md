@@ -2,6 +2,12 @@
 
 Minimal, public-safe GNU Stow dotfiles for macOS Apple Silicon.
 
+## Introduction
+
+These are my personal dotfiles. They are published primarily for my own use across machines, and secondarily as inspiration for anyone building a similar macOS development setup.
+
+You are welcome to browse, borrow ideas, or copy pieces, but this repo is intentionally opinionated around my workflow, accounts, tools, keyboard habits, and AI coding setup. Treat it as a reference, not a drop-in framework. If you do use it directly, read the scripts first and expect to adjust names, paths, Git identity, installed apps, and secrets handling for your own machine.
+
 This repo is my portable baseline for getting a fresh Mac into a familiar working state quickly: shell, terminal, Git, tmux, keyboard remaps, AI coding assistants, package installs, and macOS defaults.
 
 ## What I use this for
